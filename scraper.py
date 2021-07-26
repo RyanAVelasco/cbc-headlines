@@ -95,40 +95,32 @@ with webdriver.Firefox(options=fireFoxOptions) as driver:
             ##link = links.find_elements_by_tag_name('a')
             link = links.get_attribute('href')
 
-            ##gets urls of articles that are specificially from the looked at region
-            if not link == None and sectionURL[region] in link : 
-                # print(link)
-                headlines_articles.append(link)
+            ##gets and places in list urls of articles that are from the current region
+            if not link == None and sectionURL[region] in link : headlines_articles.append(link)
         
         for writing in range(0, len(headlines_articles)):
+
             ##navigate to current article
             driver.get(headlines_articles[writing])
-            if writing == 1:match_writing = 1    
+            if writing == 1 : match_writing = 1    
 
-            ##begin scraping article here            
-            ##headline h1 .detailHeadline
+            ##begin scraping article here
             if 'https://www.cbc.ca/player/play/' in driver.current_url or not driver.find_element_by_tag_name('h1'):
                 continue
             else:
                 headline = driver.find_element_by_tag_name("h1").text
-                print('[HEADLINE]', headline)
-
-                ##subtitle h2 .deck 
-                subtitle = driver.find_element_by_tag_name('h2').text
-                # print('[SUBTITLE]', subtitle)
                 
-                ##author .byLineDetails & timestamp .timeStamp
+                subtitle = driver.find_element_by_tag_name('h2').text
+                
                 author_timestamp = driver.find_element_by_class_name('bylineDetails').text
-                # print('[AUTHOR/TIMESTAMP]', author_timestamp)
                 
                 ##image url .placeholder attr=src and caption .image-caption // for now
                 
-                ##article: div .story // excluding similar links: .similarLink
                 article = driver.find_element_by_class_name('story')
                 paragraphs = article.find_elements_by_tag_name('p')
 
+                ##begins saving the article here
                 with codecs.open(region_files[region_index], 'a', 'utf-8-sig') as temp:
-                # file = open(region_files[region_index], 'a')
                     temp.write('[HEADLINE] ' + headline + '\n' + '[SUBTITLE] ' + subtitle + '\n' + '[AUTHOR/TIMESTEAMP] ' + author_timestamp + '\n')
                     temp.write('[ARTICLE]')
                     for paragraph in paragraphs:
@@ -136,7 +128,11 @@ with webdriver.Firefox(options=fireFoxOptions) as driver:
                     temp.write('END OF ARTICLE\n\n')
                     temp.close()
                 match_writing += 1
+
+        #this empties list with the article links to prevent duplication
         headlines_articles = []
+
+        #increments region_index to start search in next region
         region_index += 1
 
 driver.quit
