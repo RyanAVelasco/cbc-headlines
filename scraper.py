@@ -6,27 +6,28 @@ fireFoxOptions = webdriver.FirefoxOptions()
 fireFoxOptions.set_headless()
 
 ##saves headlines to these files, separated by region
-world = open('world.txt', 'a')
-manitoba = open('manitoba.txt', 'a')
-british_columbia = open('british_columbia.txt', 'a')
-calgary = open('calgary.txt', 'a')
-edmonton = open('edmonton.txt', 'a')
-saskatchewan = open('saskatchewan.txt', 'a')
-saskatoon = open('saskatoon.txt', 'a')
-thunder_bay = open('thunder_bay.txt', 'a')
-sudbury = open('sudbury.txt', 'a')
-windsor = open('windsor.txt', 'a')
-london = open('london.txt', 'a')
-kitchener_waterloo = open('kitchener_waterloo.txt', 'a')
-hamilton = open('hamilton.txt', 'a')
-toronto = open('toronto.txt', 'a')
-ottawa = open('ottawa.txt', 'a')
-montreal = open('montreal.txt', 'a')
-new_brunswick = open('new_brunswick.txt', 'a')
-prince_edward_island = open('prince_edward_island.txt', 'a')
-nova_scotia = open('nova_scotia.txt', 'a')
-newfoundland_labrador = open('newfoundland_labrador.txt', 'a')
-north = open('north.txt', 'a')
+##this will stay in 'w' until I make it so that we don't write duplicate headlines
+world = open('world.txt', 'w')
+manitoba = open('manitoba.txt', 'w')
+british_columbia = open('british_columbia.txt', 'w')
+calgary = open('calgary.txt', 'w')
+edmonton = open('edmonton.txt', 'w')
+saskatchewan = open('saskatchewan.txt', 'w')
+saskatoon = open('saskatoon.txt', 'w')
+thunder_bay = open('thunder_bay.txt', 'w')
+sudbury = open('sudbury.txt', 'w')
+windsor = open('windsor.txt', 'w')
+london = open('london.txt', 'w')
+kitchener_waterloo = open('kitchener_waterloo.txt', 'w')
+hamilton = open('hamilton.txt', 'w')
+toronto = open('toronto.txt', 'w')
+ottawa = open('ottawa.txt', 'w')
+montreal = open('montreal.txt', 'w')
+new_brunswick = open('new_brunswick.txt', 'w')
+prince_edward_island = open('prince_edward_island.txt', 'w')
+nova_scotia = open('nova_scotia.txt', 'w')
+newfoundland_labrador = open('newfoundland_labrador.txt', 'w')
+north = open('north.txt', 'w')
 
 world.close()
 manitoba.close()
@@ -50,6 +51,7 @@ nova_scotia.close()
 newfoundland_labrador.close()
 north.close()
 
+#files names of regions
 region_files = [
     'world.txt', 'manitoba.txt', 'british_columbia.txt', 'calgary.txt', 'edmonton.txt', 'saskatchewan.txt', 'saskatoon.txt', 'thunder_bay.txt', 'sudbury.txt', 'windsor.txt', 'london.txt', 'kitchener_waterloo.txt', 'hamilton.txt', 'toronto.txt', 'ottawa.txt', 'montreal.txt', 'new_brunswick.txt', 'prince_edward_island.txt', 'nova_scotia.txt', 'newfoundland_labrador.txt', 'north.txt'
 ]
@@ -78,8 +80,14 @@ sectionURL = {
     'newfoundland-labrador': 'https://www.cbc.ca/news/canada/newfoundland-labrador', 
     'north': 'https://www.cbc.ca/news/canada/north'
 }
+
+##empty list to store headline article urls
 headlines_articles = []
+
+##region_index is used for changing between regions to scrape
 region_index = 0
+
+##match_writing is used to make sure we switch to the next region once all articles are saved
 match_writing = 1
 
 ##main code
@@ -108,14 +116,18 @@ with webdriver.Firefox(options=fireFoxOptions) as driver:
             if 'https://www.cbc.ca/player/play/' in driver.current_url or not driver.find_element_by_tag_name('h1'):
                 continue
             else:
+                #saves aritcle headline to variable
                 headline = driver.find_element_by_tag_name("h1").text
                 
+                #saves aritcle subtitle to variable
                 subtitle = driver.find_element_by_tag_name('h2').text
                 
+                #saves aritcle author/timestamp to variable
                 author_timestamp = driver.find_element_by_class_name('bylineDetails').text
                 
                 ##image url .placeholder attr=src and caption .image-caption // for now
                 
+                #saves looks at article body and saves it o variable
                 article = driver.find_element_by_class_name('story')
                 paragraphs = article.find_elements_by_tag_name('p')
 
