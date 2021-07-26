@@ -125,7 +125,7 @@ with webdriver.Firefox(options=fireFoxOptions) as driver:
                     temp.write('[ARTICLE]')
                     for paragraph in paragraphs:
                         temp.write(paragraph.text + '\n\n') 
-                    temp.write('END OF ARTICLE\n\n')
+                    temp.write('[END OF ARTICLE]\n\n')
                     temp.close()
                 match_writing += 1
 
